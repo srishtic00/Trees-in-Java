@@ -1,0 +1,23 @@
+public TreeNode buildTree(int[] inorder, int[] postorder) {
+	
+	Map<Integer, Integer> valueToIdx = new HashMap<>();
+	for (int i = 0; i < inorder.length; i++)
+		valueToIdx.put(inorder[i], i);
+	return buildTree(postorder, new int[]{postorder.length - 1}, 0, inorder.length - 1, valueToIdx);
+	
+}
+
+private TreeNode buildTree(int[] post, int[] postPointer, int inStart, int inEnd, Map<Integer, Integer> valueToIdx) {
+	if (inStart > inEnd)
+		return null;
+	int currNodeVal = post[postPointer[0]--];
+	
+	TreeNode currNode = new TreeNode(currNodeVal);
+	if (inStart == inEnd) 
+		return currNode;
+	int inIdxCurrNode = valueToIdx.get(currNodeVal);
+	currNode.right = buildTree(post, postPointer, inIdxCurrNode + 1, inEnd, valueToIdx);
+	currNode.left = buildTree(post, postPointer, inStart, inIdxCurrNode - 1, valueToIdx);
+	
+	return currNode;
+}
